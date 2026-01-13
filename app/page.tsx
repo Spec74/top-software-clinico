@@ -19,7 +19,7 @@ async function getSoftware() {
 
 // 2. Fetch de Artículos (NUEVO)
 async function getPosts() {
-  const query = `*[_type == "post"] | order(publishedAt desc) [0...3] {
+  const query = `*[_type == "post"] | order(publishedAt desc) [0...12] {
     title,
     "slug": slug.current,
     description,
