@@ -3,7 +3,27 @@ import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import Link from "next/link";
 
-// 1. Función para buscar el artículo en Sanity
+// 1. Configuración para que el texto entienda las imágenes internas
+const ptComponents = {
+  types: {
+    image: ({ value }: any) => {
+      if (!value?.asset?._ref) {
+        return null;
+      }
+      return (
+        <div className="relative w-full h-64 md:h-96 my-8 rounded-lg overflow-hidden">
+          <Image
+            src={urlFor(value).url()}
+            alt={value.alt || 'Imagen del artículo'}
+            fill
+            className="object-contain" // Esto evita que la imagen se recorte feo
+          />
+        </div>
+      );
+    }
+  }
+};
+
 async function getPost(slug: string) {
   const query = `*[_type == "post" && slug.current == $slug][0] {
     title,
@@ -14,36 +34,31 @@ async function getPost(slug: string) {
   return client.fetch(query, { slug }, { next: { revalidate: 0 } });
 }
 
-
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params; // 👈 Esperamos a que los parámetros lleguen
+  const { slug } = await params; 
   const post = await getPost(slug);
 
-  // Si no encuentra el post, muestra error
   if (!post) {
     return <div className="text-center py-20 text-xl">Artículo no encontrado 😢</div>;
   }
 
   return (
     <article className="max-w-3xl mx-auto px-4 py-12 min-h-screen bg-white">
-      {/* Botón para volver atrás */}
       <Link href="/" className="text-emerald-600 font-bold hover:underline mb-8 block">
         ← Volver al inicio
       </Link>
 
-      {/* Título del Artículo */}
       <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
         {post.title}
       </h1>
       
-      {/* Fecha */}
       {post.publishedAt && (
         <p className="text-slate-500 mb-8 font-medium">
           Publicado el {new Date(post.publishedAt).toLocaleDateString()}
         </p>
       )}
 
-      {/* Imagen Principal */}
+      {/* Imagen Principal (Cabecera) */}
       {post.mainImage && (
         <div className="relative w-full h-[300px] md:h-[400px] mb-10 rounded-xl overflow-hidden shadow-xl">
           <Image
@@ -56,18 +71,18 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         </div>
       )}
 
-      {/* Contenido (Cuerpo del texto) */}
+      {/* Cuerpo del texto con el arreglo de componentes */}
       <div className="prose prose-lg prose-emerald text-slate-700 max-w-none">
-        <PortableText value={post.body} />
+        <PortableText value={post.body} components={ptComponents} />
       </div>
       
-      {/* Llamada a la acción final */}
-      <div className="mt-12 p-6 bg-emerald-50 rounded-lg border border-emerald-100 text-center">
-        <h3 className="font-bold text-xl text-emerald-800 mb-2">¿Quieres dejar de perder dinero con Excel?</h3>
-        <p className="mb-4 text-emerald-700">Compara las mejores opciones profesionales ahora.</p>
+      {/* Banner final para vender */}
+      <div className="mt-12 p-8 bg-slate-900 rounded-2xl text-center text-white shadow-2xl">
+        <h3 className="font-bold text-2xl mb-2">¿Tu clínica sigue perdiendo dinero?</h3>
+        <p className="mb-6 text-slate-300">No dejes que Excel frene tu crecimiento.</p>
         <Link href="/">
-           <button className="bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-700 transition">
-             Ver Tabla Comparativa
+           <button className="bg-emerald-500 text-slate-900 font-bold py-3 px-8 rounded-full hover:bg-emerald-400 transition transform hover:scale-105">
+             Ver Software Recomendado
            </button>
         </Link>
       </div>
