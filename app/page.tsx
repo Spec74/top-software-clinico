@@ -3,7 +3,10 @@ import { client } from "@/lib/sanity";
 
 // 1. Esta función pide los datos a Sanity
 async function getSoftware() {
-  const query = `*[_type == "software"] | order(isRecommended desc) {
+  // Esta query ordena primero por Recomendado (true va antes), 
+  // y luego por nombre (para que el resto se vea ordenado).
+  // "coalesce" asegura que si no tocaste el switch, cuente como "false" y no rompa el orden.
+  const query = `*[_type == "software"] | order(coalesce(isRecommended, false) desc, name asc) {
     _id,
     name,
     description,
@@ -13,7 +16,6 @@ async function getSoftware() {
     isRecommended
   }`;
   
-  // Revalidate: 0 asegura que los datos estén siempre frescos
   return client.fetch(query, {}, { next: { revalidate: 0 } }); 
 }
 
