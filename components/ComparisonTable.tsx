@@ -89,10 +89,10 @@ export default function ComparisonTable({ data }: { data: Software[] }) {
         <Table>
           <TableHeader className="bg-slate-50">
             <TableRow>
-              <TableHead className="w-[200px] font-bold text-slate-700">Software</TableHead>
-              <TableHead className="hidden lg:table-cell text-slate-700">Ideal Para</TableHead>
-              <TableHead className="text-slate-700">Valoración</TableHead>
-              <TableHead className="text-right text-slate-700">Precio</TableHead>
+              <TableHead className="w-[200px] font-bold text-slate-700">SOFTWARE</TableHead>
+              <TableHead className="hidden lg:table-cell text-slate-700">IDEAL PARA</TableHead>
+              <TableHead className="text-slate-700">VALORACION</TableHead>
+              <TableHead className="text-right text-slate-700">PRECIO</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
