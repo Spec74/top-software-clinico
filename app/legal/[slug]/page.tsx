@@ -1,4 +1,4 @@
-import Link from "next/link";
+¿import Link from "next/link";
 import { notFound } from "next/navigation";
 
 // Diccionario de contenidos legales básicos
@@ -48,11 +48,13 @@ const legalContent: Record<string, { title: string; content: React.ReactNode }> 
   }
 };
 
-export default function LegalPage({ params }: { params: { slug: string } }) {
-  const pageData = legalContent[params.slug];
+// 👇 CAMBIO IMPORTANTE AQUÍ: Hacemos la función 'async' y el tipo 'Promise'
+export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params; // Esperamos a que lleguen los parámetros
+  const pageData = legalContent[slug];
 
   if (!pageData) {
-    return notFound(); // Si escriben /legal/algo-raro, da error 404
+    return notFound();
   }
 
   return (
