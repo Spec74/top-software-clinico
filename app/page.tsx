@@ -1,38 +1,35 @@
 import ComparisonTable from "@/components/ComparisonTable";
-import { Button } from "@/components/ui/button";
+import { client } from "@/lib/sanity";
 
-// Datos simulados (Aquí irán tus afiliados reales luego)
-const softwareData = [
-  {
-    id: "1",
-    name: "Dentalink",
-    description: "Gestión integral con pagos online y Agenda.",
-    price: "Desde $50/mes",
-    rating: 5,
-    affiliateLink: "https://dentalink.com", // Aquí irá tu link de afiliado
-    isRecommended: true,
-  },
-  {
-    id: "2",
-    name: "ClinicCloud",
-    description: "Nube pura. Ideal para franquicias grandes.",
-    price: "Consultar",
-    rating: 4,
-    affiliateLink: "https://cliniccloud.com",
-    isRecommended: false,
-  },
-  {
-    id: "3",
-    name: "Doctoralia",
-    description: "El mejor para captar pacientes nuevos.",
-    price: "Desde $99/mes",
-    rating: 4,
-    affiliateLink: "https://doctoralia.com",
-    isRecommended: false,
-  },
-];
+// 1. Esta función pide los datos a Sanity
+async function getSoftware() {
+  const query = `*[_type == "software"] | order(isRecommended desc) {
+    _id,
+    name,
+    description,
+    price,
+    rating,
+    affiliateLink,
+    isRecommended
+  }`;
+  
+  // Revalidate: 0 asegura que los datos estén siempre frescos
+  return client.fetch(query, {}, { next: { revalidate: 0 } }); 
+}
 
-export default function Home() {
+export default async function Home() {
+  const data = await getSoftware();
+
+  const formattedData = data.map((item: any) => ({
+    id: item._id,
+    name: item.name,
+    description: item.description,
+    price: item.price,
+    rating: item.rating,
+    affiliateLink: item.affiliateLink,
+    isRecommended: item.isRecommended
+  }));
+
   return (
     <main className="min-h-screen bg-slate-50 font-sans">
       {/* Hero Section */}
@@ -42,17 +39,17 @@ export default function Home() {
             Los Mejores Software para <span className="text-emerald-400">Clínicas</span> en 2025
           </h1>
           <p className="text-slate-300 text-xl max-w-2xl mx-auto">
-            Hemos analizado 20+ herramientas. Solo estas 3 te ayudarán a facturar más y perder menos tiempo.
+            Comparativa actualizada y honesta para digitalizar tu consultorio.
           </p>
         </div>
       </section>
 
-      {/* Tabla Comparativa */}
+      {/* Tabla Comparativa - Conectada a Sanity */}
       <section className="max-w-5xl mx-auto -mt-10 px-4 pb-20 relative z-10">
-        <ComparisonTable data={softwareData} />
+        <ComparisonTable data={formattedData} />
         
         <div className="mt-12 text-center text-slate-500 text-sm">
-          <p>Información actualizada a Enero 2025. Algunos enlaces pueden generar comisiones.</p>
+          <p>Información gestionada desde Sanity CMS.</p>
         </div>
       </section>
     </main>
