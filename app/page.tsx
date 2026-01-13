@@ -38,7 +38,7 @@ export default async function Home() {
       <section className="bg-slate-900 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
-            Los Mejores Software para <span className="text-emerald-400">Clínicas</span> en 2025
+            Los Mejores Software para <span className="text-emerald-400">Clínicas</span> en 2026
           </h1>
           <p className="text-slate-300 text-xl max-w-2xl mx-auto">
             Comparativa actualizada y honesta para digitalizar tu consultorio.
