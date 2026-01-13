@@ -1,7 +1,16 @@
-¿import Link from "next/link";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
-// Diccionario de contenidos legales básicos
+// 1. Definimos las páginas válidas para que Next.js sepa cuáles construir
+export async function generateStaticParams() {
+  return [
+    { slug: 'aviso-legal' },
+    { slug: 'privacidad' },
+    { slug: 'cookies' },
+  ];
+}
+
+// Diccionario de contenidos
 const legalContent: Record<string, { title: string; content: React.ReactNode }> = {
   "aviso-legal": {
     title: "Aviso Legal",
@@ -48,9 +57,8 @@ const legalContent: Record<string, { title: string; content: React.ReactNode }> 
   }
 };
 
-// 👇 CAMBIO IMPORTANTE AQUÍ: Hacemos la función 'async' y el tipo 'Promise'
 export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params; // Esperamos a que lleguen los parámetros
+  const { slug } = await params;
   const pageData = legalContent[slug];
 
   if (!pageData) {
