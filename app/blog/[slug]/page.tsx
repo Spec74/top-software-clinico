@@ -14,8 +14,10 @@ async function getPost(slug: string) {
   return client.fetch(query, { slug }, { next: { revalidate: 0 } });
 }
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
-  const post = await getPost(params.slug);
+
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params; // 👈 Esperamos a que los parámetros lleguen
+  const post = await getPost(slug);
 
   // Si no encuentra el post, muestra error
   if (!post) {
