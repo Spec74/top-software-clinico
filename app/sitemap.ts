@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { client } from "@/lib/sanity"; // 👈 Asegúrate de que esta ruta sea correcta según tu proyecto
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://softwareclinico.top';
+  const baseUrl = 'https://top-software-clinico.vercel.app/';
 
   // 1. Obtenemos todos los slugs de tus artículos
   const posts = await client.fetch(`
